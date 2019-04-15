@@ -20,7 +20,7 @@ object AreaCityAdsDayCountHandler {
         val city: String = adsLog.city
         val adsId: Long = adsLog.adsId
         val date: String = format.format(new Date(adsLog.ts))
-        val dateAreaCityAds = sb.append(date).append(":").append(area).append(":")
+        val dateAreaCityAds :String= sb.append(date).append(":").append(area).append(":")
           .append(city).append(":").append(adsId).toString()
         sb.clear()
         (dateAreaCityAds, 1L)
@@ -32,7 +32,7 @@ object AreaCityAdsDayCountHandler {
 
     //使用updateStateByKey统计一天的点击量
       //使用updateStateByKey需要设置checkpoint
-    ssc.sparkContext.setCheckpointDir("./ck")
+//    ssc.sparkContext.setCheckpointDir("./ck")
     val dateAreaCityAdsCount: DStream[(String, Long)] = dateAreaCityAdsPairsDS.updateStateByKey[Long] {(current:Seq[Long],previous:Option[Long]) =>
       val currentCount: Long = current.foldLeft(0L)(_ + _)
       val previousCount: Long = previous.getOrElse(0)

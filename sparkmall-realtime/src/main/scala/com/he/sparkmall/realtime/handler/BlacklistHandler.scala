@@ -25,7 +25,7 @@ object BlacklistHandler {
           val uid: Long = adsLog.uid
           val date: String = format.format(new Date(adsLog.ts))
           val adsId: Long = adsLog.adsId
-          val field = uid +":"+ date +":"+ adsId
+          val field:String = uid +":"+ date +":"+ adsId
           jedis.hincrBy(key, field, 1L)
           val count: Long = jedis.hget(key, field).toLong
           if (count > 100) {
@@ -84,8 +84,8 @@ object BlacklistHandler {
       val blacklistSetBC: Broadcast[util.Set[String]] = sparkContext.broadcast(blacklistSet)
       //根据黑名单进行过滤
       val filtedRdd: RDD[AdsLog] = rdd.filter { adsLog =>
-//        val blacklistSet: util.Set[String] = blacklistSetBC.value
-        !blacklistSetBC.value.contains(adsLog.uid.toString)
+        val blacklistSet: util.Set[String] = blacklistSetBC.value
+        !blacklistSet.contains(adsLog.uid.toString)
       }
       filtedRdd
     }
